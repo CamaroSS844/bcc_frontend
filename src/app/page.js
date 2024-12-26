@@ -63,8 +63,8 @@ const DeviceMotionAndOrientation = () => {
         // Display the motion and orientation data
         isTracking ?
           <>
-            "Acceleration x:" {console.log(motionData.x)}
-            "Acceleration y:" {console.log(motionData.y)}
+            "Acceleration x:" {motionData.x}
+            "Acceleration y:" {motionData.y}
           </>: 
           null
 
