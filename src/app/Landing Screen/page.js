@@ -5,6 +5,12 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import SideNav from "./OverviewComponents/sideNav";
+import TopNav from "./OverviewComponents/topNav";
+import LocalMap from "./OverviewComponents/map";
+
+var loginScreen = false;
+
 
 export default function Home() {
   const [username, setUsername] = useState('');
@@ -68,10 +74,10 @@ export default function Home() {
     }
   }, []);
 
- 
+  if (loginScreen) {
     return (
       <div className={styles.page}>
-        <div className={styles.backdrop}>
+        <div style={{ width: "100vw", height: "100vh", display: "grid", gridTemplate: "auto/ auto auto", backgroundColor: "#000" }}>
           <Image
             src="/Bulawayo_CBD.jpg"
             alt="Bulawayo_CBD"
@@ -101,16 +107,31 @@ export default function Home() {
             priority
           />
         </div>
-        <div className={styles.mainContent}>
-          <div className={styles.loginForm}>
+        <div style={{
+          display: "flex", flexDirection: "column",
+          justifyContent: "center", alignItems: "center",
+          background: "#000000a1", zIndex: 1,
+          position: "absolute",
+          width: "100vw",
+          height: "100vh",
+        }}>
+          <div style={{
+            width: "35vw",
+            height: "70vh",
+            backgroundColor: "#dfdfdf",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center"
+          }}>
             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
             <h2>Login</h2>
-            <div className={styles.inputContainer}>
+            <div style={{ width: "80%", display: "inherit", flexDirection: "inherit", justifyContent: "flex-start", gap: "10px" }}>
               <label>Username:</label> <input type="text" name="Name" id="name" placeholder="Username" onChange={(e) => setUsername(e.target.value)} required />
               <label>Password:</label> <input type="password" name="password" id="password" placeholder="Enter Password" onChange={(e) => setPassword(e.target.value)} required />
             </div>
             <span style={{ color: "#040498" }}>Forgot Password?</span>
-            <button
+            <button style={{ width: "40%", height: "30px", marginTop: "10px" }}
               type="submit" onClick={() => handleLogin()} disabled={loading}>
               {loading ? 'Logging in...' : 'Login'}
             </button>
@@ -118,4 +139,19 @@ export default function Home() {
         </div>
       </div>
     )
+  } else {
+
+    return (
+      <div className={styles.page}>
+        <TopNav />
+        <SideNav />
+        <main className={styles.main}>
+          <LocalMap />
+        </main>
+        <footer className={styles.footer}>
+          <span className={styles.footerText}>© 2024 Mine Machines</span>
+        </footer>
+      </div>
+    );
   }
+}

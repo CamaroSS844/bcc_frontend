@@ -54,12 +54,23 @@
   z-index: 2;
 }
 
-.backdrop {
-  width: 100vw;
-  height: 100vh; 
-  display: grid; 
-  grid-template: auto/ auto auto; 
-  background-color: #000;
+.sideNavLink {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  width: 100%;
+  align-items: center;
+  padding-left: 20px;
+}
+
+.navbar {
+  display: flex;
+  flex-direction: row;
+  padding-right: 20px;
+}
+
+.navAnchor {
+  padding: 5px 20px 0 20px;
 }
 
 .main {
@@ -83,35 +94,65 @@
   padding-bottom: 15px;
 }
 
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw; /* Ensures it covers the viewport width */
+  height: 100vh; /* Ensures it covers the viewport height */
+  z-index: -1;
+}
+
 .mainContent {
-  display: flex; 
-  flex-direction: column;
-  justify-content: center; 
-  align-items: center;
-  background: #000000a1; 
-  z-index: 1;
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
+  background-color: #000000a9;
+  width: 90%;
+  padding: 10px 0 0 40px;
+  margin: 20svh;
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
-.loginForm {
-  width: 35vw;
-  height: 70vh;
-  background-color: #dfdfdf;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.chartContainer {
+  width: 100%;
+  display: grid;
+  gap: 10%;
+  grid-template: auto / 40% 45%;
+  margin-top: 10px;
 }
 
-.inputContainer { 
-  width: 80%; 
-  display: inherit; 
-  flex-direction: inherit; 
-  justify-content: flex-start; 
-  gap: 10px 
+.pieChart {
+  border-radius: 5px;
+  height: 30vh;
+  width: 100%;
+  background-color: #fff;
 }
+.BarChart {
+  border-radius: 5px;
+  height: 30vh;
+  background-color: #fff;
+}
+
+/* .main ol {
+  font-family: var(--font-geist-mono);
+  padding-left: 0;
+  margin: 0;
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: -0.01em;
+  list-style-position: inside;
+}
+
+.main li:not(:last-of-type) {
+  margin-bottom: 8px;
+}
+
+.main code {
+  font-family: inherit;
+  background: var(--gray-alpha-100);
+  border-radius: 4px;
+  font-weight: 600;
+} */
 
 .ctas {
   display: flex;

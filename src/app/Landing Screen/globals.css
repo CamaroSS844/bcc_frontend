@@ -41,16 +41,9 @@ input {
   border: 1px solid #090942;
   padding-left: 5px;
 }
-
 input:focus-visible {
   box-shadow: 0 0 5px #0b0bd3;
   outline-offset: 0;
-}
-
-button { 
-  width: 40%; 
-  height: 30px; 
-  margin-top: 10px 
 }
 
 

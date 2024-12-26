@@ -36,6 +36,7 @@ const locations = [
     { key: 4, location: { lat: -20.093513310429245, lng: 28.489300521291685 } },
     { key: 5, location: { lat: -20.093532832301065, lng: 28.48928040472425 } },
     { key: 6, location: { lat: -20.09354605679351, lng: 28.48926632312705 } },
+
 ];
 
 const PoiMarkers = ({ pois, color }) => {
@@ -140,9 +141,10 @@ function LocalMap() {
                 <h1>Hello, world!</h1>
                 <div style={{ height: '500px', width: '700px' }}>
                     <Map
-                        defaultZoom={13}
+                        defaultZoom={20}
                         defaultCenter={{ lat: -20.093, lng: 28.490 }}
                         mapId='2d7e4d007fa262a0'
+
                         onCameraChanged={(ev) =>
                             console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
                         }>
