@@ -26,61 +26,12 @@
   } */
 }
 
-.header {
-  position: fixed;
-  display: flex;
-  flex-direction: row;
-  background-color: #fff;
-  width: 100%;
-  height: 10svh;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  z-index: 2;
-}
-
-.sideNav {
-  position: fixed;
-  display: flex;
-  flex-direction: column;
-  background-color: #fff;
-  width: 15vw;
-  height: 90vh;
-  top: 10.1svh;
-  padding-top: 30px;
-  align-self: flex-start;
-  align-items: center;
-  gap: 16px;
-  z-index: 2;
-}
-
 .backdrop {
   width: 100vw;
   height: 100vh; 
   display: grid; 
   grid-template: auto/ auto auto; 
   background-color: #000;
-}
-
-.main {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  z-index: 1;
-}
-
-.mainContainer {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  align-items: center;
-  position: relative;
-}
-
-.mainHeading {
-  color: #fff;
-  font-size: 1.6em;
-  padding-bottom: 15px;
 }
 
 .mainContent {
@@ -103,6 +54,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  border-radius: 15px;
 }
 
 .inputContainer { 
@@ -111,31 +63,6 @@
   flex-direction: inherit; 
   justify-content: flex-start; 
   gap: 10px 
-}
-
-.ctas {
-  display: flex;
-  gap: 16px;
-}
-
-.ctas a {
-  appearance: none;
-  border-radius: 128px;
-  height: 48px;
-  padding: 0 20px;
-  border: none;
-  border: 1px solid transparent;
-  transition:
-    background 0.2s,
-    color 0.2s,
-    border-color 0.2s;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  line-height: 20px;
-  font-weight: 500;
 }
 
 a.primary {
@@ -147,22 +74,6 @@ a.primary {
 a.secondary {
   border-color: var(--gray-alpha-200);
   min-width: 180px;
-}
-
-.footer {
-  grid-row-start: 3;
-  display: flex;
-  gap: 24px;
-}
-
-.footer a {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.footer img {
-  flex-shrink: 0;
 }
 
 /* Enable hover only on non-touch devices */
@@ -195,16 +106,6 @@ a.secondary {
 
   .main ol {
     text-align: center;
-  }
-
-  .ctas {
-    flex-direction: column;
-  }
-
-  .ctas a {
-    font-size: 14px;
-    height: 40px;
-    padding: 0 16px;
   }
 
   a.secondary {
