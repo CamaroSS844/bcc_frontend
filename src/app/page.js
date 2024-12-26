@@ -47,7 +47,6 @@ export default function Home() {
       localStorage.setItem('authToken', data.token);
 
       // Redirect user to the dashboard
-      // window.location.href = '/dashboard';
     } catch (error) {
       setErrorMessage(error.message);
     } finally {
@@ -56,20 +55,23 @@ export default function Home() {
   };
 
 
-  const [windowDimensions, setWindowDimensions] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
+  
+    const [windowDimensions, setWindowDimensions] = useState({
+      width: (typeof window !== 'undefined')? window.innerWidth : null,
+      height: (typeof window !== 'undefined')? window.innerHeight : null,
+    });
 
   useEffect(() => {
-    const handleResize = () => {
-      setWindowDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    if (typeof window !== 'undefined') {
+      const handleResize = () => {
+        setWindowDimensions({
+          width: window.innerWidth,
+          height: window.innerHeight,
+        });
+      };
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }
   }, []);
 
   if (loginScreen) {
@@ -130,7 +132,7 @@ export default function Home() {
             </div>
             <span style={{ color: "#040498" }}>Forgot Password?</span>
             <button style={{ width: "40%", height: "30px", marginTop: "10px" }}
-               type="submit" onClick={() => handleLogin()} disabled={loading}>
+              type="submit" onClick={() => handleLogin()} disabled={loading}>
               {loading ? 'Logging in...' : 'Login'}
             </button>
           </div>
