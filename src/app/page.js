@@ -57,8 +57,8 @@ export default function Home() {
 
 
   const [windowDimensions, setWindowDimensions] = useState({
-    width: !(typeof window !== 'undefined') ? window.innerWidth / 2 : 700,
-    height: !(typeof window !== 'undefined') ? window.innerHeight / 2: 350,
+    width: (typeof window !== 'undefined') ? window.innerWidth / 2 : 700,
+    height: (typeof window !== 'undefined') ? window.innerHeight / 2: 350,
   });
 
   useEffect(() => {
