@@ -113,26 +113,6 @@
   overflow: hidden;
 }
 
-.chartContainer {
-  width: 100%;
-  display: grid;
-  gap: 10%;
-  grid-template: auto / 40% 45%;
-  margin-top: 10px;
-}
-
-.pieChart {
-  border-radius: 5px;
-  height: 30vh;
-  width: 100%;
-  background-color: #fff;
-}
-.BarChart {
-  border-radius: 5px;
-  height: 30vh;
-  background-color: #fff;
-}
-
 /* .main ol {
   font-family: var(--font-geist-mono);
   padding-left: 0;
@@ -154,30 +134,6 @@
   font-weight: 600;
 } */
 
-.ctas {
-  display: flex;
-  gap: 16px;
-}
-
-.ctas a {
-  appearance: none;
-  border-radius: 128px;
-  height: 48px;
-  padding: 0 20px;
-  border: none;
-  border: 1px solid transparent;
-  transition:
-    background 0.2s,
-    color 0.2s,
-    border-color 0.2s;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  line-height: 20px;
-  font-weight: 500;
-}
 
 a.primary {
   background: var(--foreground);
@@ -236,16 +192,6 @@ a.secondary {
 
   .main ol {
     text-align: center;
-  }
-
-  .ctas {
-    flex-direction: column;
-  }
-
-  .ctas a {
-    font-size: 14px;
-    height: 40px;
-    padding: 0 16px;
   }
 
   a.secondary {

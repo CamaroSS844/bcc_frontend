@@ -4,15 +4,18 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import React from "react";
+import { useRouter } from 'next/navigation'
 
-export default function Home() {
+export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [isClient, setIsClient] = React.useState(false);
+  const router = useRouter();
+
+  
 
   useEffect(() => {
     setIsClient(true);
@@ -28,15 +31,19 @@ export default function Home() {
     };
 
     try {
-      const response = await fetch('https://bcc-backend-fwc7.onrender.com/user/login/', {
+      const response = await fetch('http://127.0.0.1:8000/user/login/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': '*/*',
+          'Accept-encoding': 'gzip, deflate, br',
+          'Connection': 'keep-alive'
         },
         body: JSON.stringify(loginData),
       });
 
       if (!response.ok) {
+        console.log(response);
         throw new Error('Login failed. Please check your credentials.');
       }
 
@@ -45,34 +52,23 @@ export default function Home() {
 
       // Save token or handle success
       localStorage.setItem('authToken', data.token);
+      router.push('/Home')
 
       // Redirect user to the dashboard
     } catch (error) {
+      console.log(error.message);
       setErrorMessage(error.message);
     } finally {
       setLoading(false);
     }
   };
 
-
-
   const [windowDimensions, setWindowDimensions] = useState({
-    width: (typeof window !== 'undefined') ? window.innerWidth / 2 : 700,
-    height: (typeof window !== 'undefined') ? window.innerHeight / 2: 350,
+    width:  700,
+    height: 350,
   });
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const handleResize = () => {
-        setWindowDimensions({
-          width: window.innerWidth,
-          height: window.innerHeight,
-        });
-      };
-      window.addEventListener("resize", handleResize);
-      return () => window.removeEventListener("resize", handleResize);
-    }
-  }, []);
+
 
 
   return (
@@ -109,7 +105,7 @@ export default function Home() {
       </div>
       <div className={styles.mainContent}>
         <div className={styles.loginForm}>
-          { errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+          {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
           <h2>Login</h2>
           <div className={styles.inputContainer}>
             <label>Username:</label>
@@ -133,10 +129,10 @@ export default function Home() {
           </div>
           <span style={{ color: "#040498" }}>Forgot Password?</span>
           <button
-            type="submit" 
-            onClick={() => handleLogin()} 
+            type="submit"
+            onClick={() => handleLogin()}
             disabled={loading}
-            >
+          >
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </div>
