@@ -15,7 +15,6 @@
 */
 
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { createRoot } from "react-dom/client";
 import {
     APIProvider,
     AdvancedMarker,
@@ -27,6 +26,7 @@ import {
 import { MarkerClusterer } from '@googlemaps/markerclusterer';
 import { Marker } from '@googlemaps/markerclusterer';
 import { geolocated } from 'react-geolocated';
+import styles from './../page.module.css';
 
 
 const locations = [
@@ -139,12 +139,11 @@ function LocalMap() {
         >
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <h1>Hello, world!</h1>
-                <div style={{ height: '500px', width: '700px' }}>
+                <div className={styles.mapStyles}  style={{width: "900px", height: "500px"}}>
                     <Map
                         defaultZoom={20}
                         defaultCenter={{ lat: -20.093, lng: 28.490 }}
                         mapId='2d7e4d007fa262a0'
-
                         onCameraChanged={(ev) =>
                             console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
                         }>

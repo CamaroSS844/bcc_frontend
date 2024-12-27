@@ -87,6 +87,10 @@
   align-items: center;
   position: relative;
 }
+.mapStyles {
+  width: 90%;
+  height: 50%;
+}
 
 .mainHeading {
   color: #fff;
