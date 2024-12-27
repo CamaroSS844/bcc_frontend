@@ -32,6 +32,7 @@
   display: grid; 
   grid-template: auto/ auto auto; 
   background-color: #000;
+  overflow: hidden;
 }
 
 .mainContent {
