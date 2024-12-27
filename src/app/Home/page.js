@@ -1,45 +1,44 @@
-//to inform next js this is a client component
 "use client";
 
-import Image from "next/image";
-import React from "react";
-import styles from "./page.module.css";
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import SideNav from "./OverviewComponents/sideNav";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import TopNav from "./OverviewComponents/topNav";
+import SideNav from "./OverviewComponents/sideNav";
 import LocalMap from "./OverviewComponents/map";
-import { useRouter } from "next/router";
-
-var loginScreen = false;
-
+import styles from "./page.module.css";
 
 export default function Home() {
-  const [loading, setLoading] = useState(false);
-  const [isClient, setIsClient] = React.useState(false);
-  const router = isClient ? useRouter() : null;
-  const authToken = isClient ? localStorage.getItem("authToken") : null;
+  const [isClient, setIsClient] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setIsClient(true);
-  });
+  }, []);
 
-  //const router = useRouter();
-  if (isClient && authToken != null) {
+  useEffect(() => {
+    if (isClient) {
+      const authToken = localStorage.getItem("authToken");
+      if (!authToken) {
+        router.push("/"); // Redirect to login if no auth token
+      }
+    }
+  }, [isClient, router]);
 
-    return (
-      <div className={styles.page}>
-        <TopNav />
-        <SideNav />
-        <main className={styles.main}>
-          <LocalMap />
-        </main>
-        <footer className={styles.footer}>
-          <span className={styles.footerText}>© 2024 Mine Machines</span>
-        </footer>
-      </div>
-    );
-  } else if (isClient && authToken == null){
-    router.push('/')
+  if (!isClient) {
+    // Avoid rendering until client-side rendering is confirmed
+    return null;
   }
+
+  return (
+    <div className={styles.page}>
+      <TopNav />
+      <SideNav />
+      <main className={styles.main}>
+        <LocalMap />
+      </main>
+      <footer className={styles.footer}>
+        <span className={styles.footerText}>© 22series</span>
+      </footer>
+    </div>
+  );
 }

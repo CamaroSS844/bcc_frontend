@@ -5,7 +5,7 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import { useState, useEffect } from "react";
 import React from "react";
-import { useRouter } from 'next/navigation'
+//import { useRouter } from 'next/navigation'
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -13,7 +13,7 @@ export default function Login() {
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [isClient, setIsClient] = React.useState(false);
-  const router = useRouter();
+  //const router = useRouter();
 
   
 
