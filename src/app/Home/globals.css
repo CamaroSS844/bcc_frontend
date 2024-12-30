@@ -46,6 +46,13 @@ input:focus-visible {
   outline-offset: 0;
 }
 
+button {
+  width: max-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 
 @media (prefers-color-scheme: dark) {
   /* html {

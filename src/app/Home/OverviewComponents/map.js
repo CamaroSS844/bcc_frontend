@@ -27,6 +27,9 @@ import { MarkerClusterer } from '@googlemaps/markerclusterer';
 import { Marker } from '@googlemaps/markerclusterer';
 import { geolocated } from 'react-geolocated';
 import styles from './../page.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import toggleMarkerAction from '@/app/Redux/toggleMarkerAction';
+import { Connect } from 'react-redux';
 
 
 const locations = [
@@ -39,9 +42,10 @@ const locations = [
 
 ];
 
-const PoiMarkers = ({ pois, color }) => {
+const PoiMarkers = ({ pois, color, toggleData }) => {
     const [markers, setMarkers] = useState({});
     const clusterer = useRef(null);
+    const draggableBool = color == 'green' ? true : false;
 
     const map = useMap();
 
@@ -78,7 +82,10 @@ const PoiMarkers = ({ pois, color }) => {
         if (!ev.latLng) return;
         console.log('marker clicked:', ev.latLng.toString());
         map.panTo(ev.latLng);
+        toggleData(true);
     });
+
+
     return (
         <>
             {pois.map((poi) => (
@@ -86,6 +93,7 @@ const PoiMarkers = ({ pois, color }) => {
                     key={poi.key}
                     position={poi.location}
                     clickable={true}
+                    draggable={draggableBool}
                     onClick={handleClick}
                     ref={marker => setMarkerRef(marker, poi.key)}
                 >
@@ -99,69 +107,93 @@ const PoiMarkers = ({ pois, color }) => {
 
 function LocalMap() {
 
+    const [filterOption, setFilterOption] = useState("New Graves");
+    const [dropDownDisplay, setDropDownDisplay] = useState("none");
+    const [dateValue, setDateValue] = useState('')
+    const [toggleMarkerAction, setToggleMarkerAction] = useState(false);
+    console.log("toggleMarkerAction " + toggleMarkerAction)
+
     const [currentLocation, setCurrentLocation] = useState([{
-        key: 7, location: { lat: -20.093, lng: 28.490 }
+        key: 7, location: { lat: -20.093476785630237, lng: 28.489348801053524 }
     }]);
 
     const [userLocation, setUserLocation] = useState([{
-        key: 7, location: { lat: -20.093, lng: 28.590 }
+        key: 7, location: { lat: -20.093476785630237, lng: 28.489348801053524 }
     }]);
 
-  // define the function that finds the users geolocation
-  const getUserLocation = () => {
-    // if geolocation is supported by the users browser
-    if (navigator.geolocation) {
-      // get the current users location
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          // save the geolocation coordinates in two variables
-          const { latitude, longitude } = position.coords;
-          // update the value of userlocation variable
-          setUserLocation([{key: 8, location: { lat: latitude, lng: longitude }}]);
-          console.log('User location:', latitude, longitude);
-        },
-        // if there was an error getting the users location
-        (error) => {
-          console.error('Error getting user location:', error);
+    const handleClick = (val) => {
+        setFilterOption(val);
+        //filter the markers and make the map pan to show 
+        //where there are the most number  of markers
+    }
+
+    const filterBtnClick = () => {
+        if (dropDownDisplay == "none") {
+            setDropDownDisplay("block")
+        } else {
+            setDropDownDisplay("none")
         }
-      );
     }
-    // if geolocation is not supported by the users browser
-    else {
-      console.error('Geolocation is not supported by this browser.');
-    }
-  };
 
 
     return (
-        <APIProvider
-            apiKey={'AIzaSyD-r--dhxYovA13Edk1gvre6ILosbCijTk'} onLoad={() => console.log('Maps API has loaded.')}
-        >
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <h1>Hello, world!</h1>
-                <div className={styles.mapStyles}  style={{width: "900px", height: "500px"}}>
-                    <Map
-                        defaultZoom={20}
-                        defaultCenter={{ lat: -20.093, lng: 28.490 }}
-                        mapId='2d7e4d007fa262a0'
-                        onCameraChanged={(ev) =>
-                            console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
-                        }>
-                        <PoiMarkers pois={locations} color={'#FBBC04'} />
-                        <PoiMarkers pois={currentLocation} color={'#d3150b'} />
-                        <PoiMarkers pois={userLocation} color={'green'} />
-                    </Map>
-                    <button onClick={() => setCurrentLocation([{ ...currentLocation[0], location: {lat: -20.093, lng: 28.490} }])}>
-                        Set center
-                    </button>
-                    <button onClick={() => getUserLocation()}>
-                        Get User Location
-                    </button>
+        <>
+            <APIProvider
+                apiKey={'AIzaSyD-r--dhxYovA13Edk1gvre6ILosbCijTk'} onLoad={() => console.log('Maps API has loaded.')}
+            >
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+
+                    <div className={styles.mapStyles}>
+                        
+                        <Map
+                            defaultZoom={20}
+                            defaultCenter={{ lat: -20.093476785630237, lng: 28.489348801053524 }}
+                            mapId='2d7e4d007fa262a0'
+                            onCameraChanged={(ev) =>
+                                console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
+                            }>
+                            <PoiMarkers pois={locations} color={'#FBBC04'} toggleData={setToggleMarkerAction}/>
+                            <PoiMarkers pois={currentLocation} color={'#d3150b'} toggleData={setToggleMarkerAction} />
+                            <PoiMarkers pois={userLocation} color={'green'} toggleData={setToggleMarkerAction} />
+                        </Map>
+                        <div className={styles.filterBar}>
+                        
+                            <div className={styles.dropdown}>
+                                <button className={styles.dropbtn} onClick={filterBtnClick}>Filter: {filterOption}</button>
+                                <div className={styles.dropdownContent} style={{ display: dropDownDisplay }}>
+                                    <a href="#" onClick={() => handleClick("New Graves")}>New Graves</a>
+                                    <a href="#" onClick={() => handleClick("Reserved")}>Reserved</a>
+                                    <a href="#" onClick={() => handleClick("Occupied")}>Occupied</a>
+                                </div>
+                            </div>
+                            <div >
+                                <input type='date' name='time' value={dateValue} onChange={ev => setDateValue(ev.target.value)} className={styles.filterInputs} />
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </APIProvider>
+            </APIProvider>
+            { toggleMarkerAction ?  
+                <div className={styles.markerContent} onClick={() => setToggleMarkerAction(false)}>
+                    <div className={styles.loginForm} onClick={() => null}>
+                        my data
+                    </div>
+                </div>
+                : null
+            }
+        </>
     )
 }
 
-
 export default LocalMap;
+
+// const mapStateToProps = (state) => ({
+//     toggleMarkerAction: state.toggleMarkerAction
+// });
+
+// const mapDispatchToProps = (dispatch) => ({
+//     showDetails: () => dispatch({ type: "SHOW_DETAILS" }),
+//     addDetails: () => dispatch({ type: "ADD_DETAILS" })
+// });
+
+// export default Connect(mapStateToProps, mapDispatchToProps)(LocalMap);

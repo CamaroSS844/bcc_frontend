@@ -30,7 +30,7 @@
   width: 100vw;
   height: 100vh; 
   display: grid; 
-  grid-template: auto/ 600px 300px; 
+  grid-template: auto/ 700px 300px; 
   background-color: #000;
   overflow: hidden;
 }

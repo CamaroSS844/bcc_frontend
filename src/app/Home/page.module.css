@@ -13,6 +13,7 @@
   min-height: 100svh;
   gap: 64px;
   font-family: var(--font-geist-sans);
+  overflow: hidden;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -32,7 +33,7 @@
   flex-direction: row;
   background-color: #fff;
   width: 100%;
-  height: 10svh;
+  height: 65px;
   justify-content: space-between;
   align-items: center;
   gap: 16px;
@@ -44,7 +45,7 @@
   display: flex;
   flex-direction: column;
   background-color: #fff;
-  width: 15vw;
+  width: 180px;
   height: 90vh;
   top: 10.1svh;
   padding-top: 30px;
@@ -80,16 +81,12 @@
   z-index: 1;
 }
 
-.mainContainer {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  align-items: center;
-  position: relative;
-}
+
 .mapStyles {
-  width: 90%;
-  height: 50%;
+  width: 1100px;
+  height: 400px;
+  margin-left: 180px;
+  margin-top: 5px;
 }
 
 .mainHeading {
@@ -108,62 +105,87 @@
 }
 
 .mainContent {
-  background-color: #000000a9;
-  width: 90%;
-  padding: 10px 0 0 40px;
-  margin: 20svh;
-  position: relative;
-  border-radius: 10px;
+  width: 100%;
+  margin: 60px;
+  height: 100vh;
   overflow: hidden;
 }
 
-/* .main ol {
-  font-family: var(--font-geist-mono);
-  padding-left: 0;
-  margin: 0;
-  font-size: 14px;
-  line-height: 24px;
-  letter-spacing: -0.01em;
-  list-style-position: inside;
+/* Style The Dropdown Button */
+.dropbtn {
+  background-color: #fff;
+  color: #000;
+  padding: 16px;
+  font-size: 16px;
+  border: 1px solid grey;
+  cursor: pointer;
+  box-shadow: 0 8px 16px #0003;
 }
 
-.main li:not(:last-of-type) {
-  margin-bottom: 8px;
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
 }
 
-.main code {
-  font-family: inherit;
-  background: var(--gray-alpha-100);
-  border-radius: 4px;
-  font-weight: 600;
-} */
-
-
-a.primary {
-  background: var(--foreground);
-  color: var(--background);
-  gap: 8px;
+/* Dropdown Content (Hidden by Default) */
+.dropdownContent {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px #00000033;
+  z-index: 1;
 }
 
-a.secondary {
-  border-color: var(--gray-alpha-200);
-  min-width: 180px;
+/* Links inside the dropdown */
+.dropdownContent a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
 }
 
-.footer {
-  grid-row-start: 3;
+/* Change color of dropdown links on hover */
+.dropdownContent a:hover {background-color: #f1f1f1}
+
+.filterBar {
   display: flex;
-  gap: 24px;
+  flex-direction: row;
+  align-items: baseline;
+  height: 50px;
+  padding-left: 20px;
 }
 
-.footer a {
-  display: flex;
+.filterInputs {
+  box-shadow: 0px 8px 16px 0px #00000033;
+  margin-left: 10px;
+}
+
+.markerContent {
+  display: flex; 
+  flex-direction: column;
+  justify-content: center; 
   align-items: center;
-  gap: 8px;
+  background: #000000a1; 
+  z-index: 2;
+  position: absolute; 
+  width: 87%;
+  top: 65;
+  height: 100%;
+  margin-left: 180px;
+  overflow: hidden;
 }
 
-.footer img {
-  flex-shrink: 0;
+.loginForm {
+  width: 35vw;
+  height: 70vh;
+  background-color: #dfdfdf;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
 }
 
 /* Enable hover only on non-touch devices */
