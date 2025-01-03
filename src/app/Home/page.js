@@ -16,7 +16,8 @@ function Home() {
   const [isClient, setIsClient] = useState(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const authToken = "5d55c9d47c0733912d87d3d69c9536764bbb3fc5"; // Replace with dynamic token retrieval if needed
+  const authToken = localStorage.getItem('authToken'); // Replace with dynamic token retrieval if needed
+
 
   useEffect(() => {
     setIsClient(true); // Confirm client-side rendering

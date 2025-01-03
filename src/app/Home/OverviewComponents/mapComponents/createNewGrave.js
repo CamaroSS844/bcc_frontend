@@ -28,7 +28,7 @@ export const CreateNewGrave = ({ userLocation, locations ,setToggleMarkerAction,
     }
 
     const addGraveBtn = async () => {
-        const authToken = "5d55c9d47c0733912d87d3d69c9536764bbb3fc5";
+        const authToken = localStorage.getItem('authToken');
 
         // Check if all fields are filled
         if (!newGraveDetails.name_of_deceased || !newGraveDetails.date_of_death || !newGraveDetails.date_of_burial || !newGraveDetails.grave_number) {
