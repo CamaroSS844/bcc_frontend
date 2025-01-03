@@ -16,7 +16,7 @@ function Home() {
   const [isClient, setIsClient] = useState(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const authToken = localStorage.getItem('authToken'); // Replace with dynamic token retrieval if needed
+  const authToken = isClient? localStorage.getItem("authToken") :false // Replace with dynamic token retrieval if needed
 
 
   useEffect(() => {
