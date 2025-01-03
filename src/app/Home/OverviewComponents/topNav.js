@@ -16,7 +16,7 @@ export default function TopNav() {
             href=""
             target="_blank"
             rel="noopener noreferrer"
-          >Cemetery</Link>
+          >Luveve</Link>
           <Link
             className={styles.navAnchor}
             href="/Machines"

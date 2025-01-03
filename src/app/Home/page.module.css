@@ -37,7 +37,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 16px;
-  z-index: 2;
+  z-index: 3;
 }
 
 .sideNav {
@@ -52,7 +52,7 @@
   align-self: flex-start;
   align-items: center;
   gap: 16px;
-  z-index: 2;
+  z-index: 3;
 }
 
 .sideNavLink {
@@ -168,7 +168,7 @@
   justify-content: center; 
   align-items: center;
   background: #000000a1; 
-  z-index: 2;
+  z-index: 1;
   position: absolute; 
   width: 87%;
   top: 65;
@@ -177,15 +177,43 @@
   overflow: hidden;
 }
 
-.loginForm {
+.addGrave, .graveDetails {
   width: 35vw;
   height: 70vh;
   background-color: #dfdfdf;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   border-radius: 15px;
+  z-index: 2;
+}
+
+.addGrave input {
+  width: 80%;
+  margin: 5px;
+}
+.addGrave span {
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.addGrave span label {
+  font-size: 0.8em;
+  width: 30%;
+}
+/*style .closebtn to place the itself at the top right of the form*/
+.closeBtn {
+  top: 0;
+  padding: 12px 30px;
+  color: black;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  border: none;
+  font-size: 1.5em;
+  background-color: inherit;
 }
 
 /* Enable hover only on non-touch devices */

@@ -6,56 +6,33 @@ import TopNav from "./OverviewComponents/topNav";
 import SideNav from "./OverviewComponents/sideNav";
 import LocalMap from "./OverviewComponents/map";
 import styles from "./page.module.css";
-import { Provider } from "react-redux";
-import { store } from "../Redux/store";
 
-export default function Home() {
+import {  useAppDispatch } from "@/lib/hooks";
+import { initialize } from "@/lib/features/dataStorageSlice";
+import StoreProvider from "../StoreProvider";
+import { retrieveData } from "./OverviewComponents/data/apiCalls";
+
+function Home() {
   const [isClient, setIsClient] = useState(false);
   const router = useRouter();
-  const retrieveData = async (authToken) => {
-    try {
-      const response = await fetch('http://127.0.0.1:8000/cemeteries/graves/?cemetery=Luveve', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': '*/*',
-          'Accept-encoding': 'gzip, deflate, br',
-          'Connection': 'keep-alive',
-          'Authorization': `Token ${authToken}`
-        }
-      });
-
-      if (!response.ok) {
-        console.log(response);
-        throw new Error('Failed to retrieve data');
-      }
-
-      const data = await response.json();
-      console.log('Data retrieval successful:', data);
-
-      // Save token or handle success
-      localStorage.setItem('graveData', data);
-
-      // Redirect user to the dashboard
-    } catch (error) {
-      console.log(error.message);
-    } finally {
-      //
-    }
-  }
+  const dispatch = useAppDispatch();
+  const authToken = "5d55c9d47c0733912d87d3d69c9536764bbb3fc5"; // Replace with dynamic token retrieval if needed
 
   useEffect(() => {
-    setIsClient(true);
+    setIsClient(true); // Confirm client-side rendering
   }, []);
 
-  if (isClient) {
-    const authToken = "5d55c9d47c0733912d87d3d69c9536764bbb3fc5"//localStorage.getItem("authToken");
+
+  useEffect(() => {
     if (!authToken) {
-      router.push("/"); // Redirect to login if no auth token
-    }else {
-      retrieveData(authToken);
+      router.push("/"); // Redirect to login
+      return;
     }
-  }
+
+    retrieveData(authToken, dispatch, initialize).then(() => {
+      console.log("Data fetched and initialized.");
+    });
+  }, [dispatch]); // Ensure this only runs once or when dependencies change
 
 
   if (!isClient) {
@@ -65,13 +42,19 @@ export default function Home() {
 
   return (
     <div className={styles.page}>
-      <Provider store={store}>
-        <TopNav />
-        <SideNav />
-        <div className={styles.mainContent}>
-          <LocalMap />
-        </div>
-      </Provider>
+      <TopNav />
+      <SideNav />
+      <div className={styles.mainContent}>
+        <LocalMap />
+      </div>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <StoreProvider>
+      <Home />
+    </StoreProvider>
   );
 }

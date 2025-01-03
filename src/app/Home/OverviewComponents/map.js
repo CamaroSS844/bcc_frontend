@@ -1,130 +1,81 @@
-/**
- * Copyright 2024 Google LLC
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *    https://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-*/
-
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     APIProvider,
-    AdvancedMarker,
     Map,
-    MapCameraChangedEvent,
-    useMap,
-    Pin
 } from '@vis.gl/react-google-maps';
-import { MarkerClusterer } from '@googlemaps/markerclusterer';
-import { Marker } from '@googlemaps/markerclusterer';
-import { geolocated } from 'react-geolocated';
 import styles from './../page.module.css';
-import { useDispatch, useSelector } from 'react-redux';
-import toggleMarkerAction from '@/app/Redux/toggleMarkerAction';
-import { Connect } from 'react-redux';
+import { sortData } from './data/dataSorting';
+import { useAppSelector, useAppDispatch } from '@/lib/hooks';
+import { dataSelector } from '@/lib/features/dataStorageSlice';
+import { downCaret } from '../utils/svgs';
+import { PoiMarkers } from './pointsOfInterest';
+import { addNewGrave, retrieveData } from './data/apiCalls';
+import { initialize, addNew, updateGrave } from '@/lib/features/dataStorageSlice';
+import { CreateNewGrave } from './mapComponents/createNewGrave';
 
-
-const locations = [
-    { key: 1, location: { lat: -20.092848060837763, lng: 28.489651564037086 } },
-    { key: 2, location: { lat: -20.093476785630237, lng: 28.489348801053524 } },
-    { key: 3, location: { lat: -20.09349756698244, lng: 28.489306556261916 } },
-    { key: 4, location: { lat: -20.093513310429245, lng: 28.489300521291685 } },
-    { key: 5, location: { lat: -20.093532832301065, lng: 28.48928040472425 } },
-    { key: 6, location: { lat: -20.09354605679351, lng: 28.48926632312705 } },
-
-];
-
-const PoiMarkers = ({ pois, color, toggleData }) => {
-    const [markers, setMarkers] = useState({});
-    const clusterer = useRef(null);
-    const draggableBool = color == 'green' ? true : false;
-
-    const map = useMap();
-
-    useEffect(() => {
-        if (!map) return;
-        if (!clusterer.current) {
-            clusterer.current = new MarkerClusterer({ map });
-        }
-    }, [map]);
-
-    useEffect(() => {
-        clusterer.current?.clearMarkers();
-        clusterer.current?.addMarkers(Object.values(markers));
-    }, [markers]);
-
-    const setMarkerRef = (marker, key) => {
-        if (marker && markers[key]) return;
-        if (!marker && !markers[key]) return;
-
-        setMarkers(prev => {
-            if (marker) {
-                return { ...prev, [key]: marker };
-            } else {
-                const newMarkers = { ...prev };
-                delete newMarkers[key];
-                return newMarkers;
-            }
-        });
-    };
-
-
-    const handleClick = useCallback((ev) => {
-        if (!map) return;
-        if (!ev.latLng) return;
-        console.log('marker clicked:', ev.latLng.toString());
-        map.panTo(ev.latLng);
-        toggleData(true);
-    });
-
-
-    return (
-        <>
-            {pois.map((poi) => (
-                <AdvancedMarker
-                    key={poi.key}
-                    position={poi.location}
-                    clickable={true}
-                    draggable={draggableBool}
-                    onClick={handleClick}
-                    ref={marker => setMarkerRef(marker, poi.key)}
-                >
-                    <Pin background={color} glyphColor={'#000'} borderColor={'#000'} />
-                </AdvancedMarker>
-            ))}
-        </>
-    );
-};
 
 
 function LocalMap() {
 
     const [filterOption, setFilterOption] = useState("New Graves");
+    const [markerFilter, setMarkerFilter] = useState("newGrave");
     const [dropDownDisplay, setDropDownDisplay] = useState("none");
-    const [dateValue, setDateValue] = useState('')
+    const [dateValue, setDateValue] = useState('');
+    const authToken = localStorage.getItem('authToken');
+    const dispatch = useAppDispatch();
+    const [requiredDetailsKey, setRequiredDetailsKey] = useState(0);
+    const [showDetails, setShowDetails] = useState(false);
     const [toggleMarkerAction, setToggleMarkerAction] = useState(false);
-    console.log("toggleMarkerAction " + toggleMarkerAction)
+    const [locations, setLocations] = useState({
+        Luveve: {
+            reserved: [],
+            newGrave: [],
+            occupied: []
+        }, Mvutshwa: {
+            reserved: [],
+            newGrave: [],
+            occupied: []
+        }, Anthlone: {
+            reserved: [],
+            newGrave: [],
+            occupied: []
+        }
+    });
+    const data = useAppSelector(dataSelector);
 
-    const [currentLocation, setCurrentLocation] = useState([{
-        key: 7, location: { lat: -20.093476785630237, lng: 28.489348801053524 }
-    }]);
+    useEffect(() => {
+        setLocations(sortData(data));
+        // if (toggleMarkerAction) {
+        //     alert("Grave added and data updated successfully!");
+        // }
+    }, [data])
 
     const [userLocation, setUserLocation] = useState([{
-        key: 7, location: { lat: -20.093476785630237, lng: 28.489348801053524 }
+        key: -2, id: -2, location: { latitude: -20.093476785630237, longitude: 28.489348801053524 }
     }]);
 
     const handleClick = (val) => {
         setFilterOption(val);
         //filter the markers and make the map pan to show 
         //where there are the most number  of markers
+        if (val == "New Graves") {
+            setMarkerFilter("newGrave")
+        } else if (val == "Reserved") {
+            setMarkerFilter("reserved")
+        } else if (val == "Occupied") {
+            setMarkerFilter("occupied")
+        }
+    }
+
+    const popUp = (val, key, popUpInfo) => {
+        setToggleMarkerAction(val);
+        if (popUpInfo == "showDetails") {
+            setShowDetails(true);
+            setRequiredDetailsKey(key);
+        } else {
+            setShowDetails(false);
+        }
+
     }
 
     const filterBtnClick = () => {
@@ -144,20 +95,19 @@ function LocalMap() {
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
                     <div className={styles.mapStyles}>
-                        
+
                         <Map
-                            defaultZoom={20}
+                            defaultZoom={16}
                             defaultCenter={{ lat: -20.093476785630237, lng: 28.489348801053524 }}
                             mapId='2d7e4d007fa262a0'
                             onCameraChanged={(ev) =>
                                 console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
                             }>
-                            <PoiMarkers pois={locations} color={'#FBBC04'} toggleData={setToggleMarkerAction}/>
-                            <PoiMarkers pois={currentLocation} color={'#d3150b'} toggleData={setToggleMarkerAction} />
-                            <PoiMarkers pois={userLocation} color={'green'} toggleData={setToggleMarkerAction} />
+                            <PoiMarkers pois={locations['Luveve'][markerFilter]} color={'#FBBC04'} toggleData={popUp} />
+                            <PoiMarkers pois={userLocation} color={'green'} toggleData={popUp} newLocation={setUserLocation} />
                         </Map>
                         <div className={styles.filterBar}>
-                        
+
                             <div className={styles.dropdown}>
                                 <button className={styles.dropbtn} onClick={filterBtnClick}>Filter: {filterOption}</button>
                                 <div className={styles.dropdownContent} style={{ display: dropDownDisplay }}>
@@ -173,11 +123,46 @@ function LocalMap() {
                     </div>
                 </div>
             </APIProvider>
-            { toggleMarkerAction ?  
-                <div className={styles.markerContent} onClick={() => setToggleMarkerAction(false)}>
-                    <div className={styles.loginForm} onClick={() => null}>
-                        my data
-                    </div>
+            {toggleMarkerAction ?
+                <div className={styles.markerContent} >
+                    {showDetails ?
+                        <div className={styles.graveDetails} >
+                            {/*put an x at the top right to close the pop up*/}
+                            <span style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+                                <button className={styles.closeBtn} onClick={() => setToggleMarkerAction(false)}>X</button>
+                            </span>
+                            <h2>Grave Details</h2>
+                            <table style={{ width: '100%', height: '50%' }}>
+                                <tbody>
+                                    <tr>
+                                        <th>Name of Deceased:</th>
+                                        <td>{JSON.stringify(locations['Luveve'][markerFilter][requiredDetailsKey]['name_of_deceased'])}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Date of Death:</th>
+                                        <td>{JSON.stringify(locations['Luveve'][markerFilter][requiredDetailsKey]['date_of_death'])}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Date of Burial:</th>
+                                        <td>{JSON.stringify(locations['Luveve'][markerFilter][requiredDetailsKey]['date_of_burial'])}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Grave Number:</th>
+                                        <td>{JSON.stringify(locations['Luveve'][markerFilter][requiredDetailsKey]['grave_number'])}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Grave Type:</th>
+                                        <td>{JSON.stringify(locations['Luveve'][markerFilter][requiredDetailsKey]['grave_type'])}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Grave Status:</th>
+                                        <td>{JSON.stringify(locations['Luveve'][markerFilter][requiredDetailsKey]['grave_status'])}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> :
+                        <CreateNewGrave userLocation={userLocation[0].location} locations={locations} setToggleMarkerAction={setToggleMarkerAction} setLocations={setLocations}/>
+                    }
                 </div>
                 : null
             }
@@ -186,14 +171,3 @@ function LocalMap() {
 }
 
 export default LocalMap;
-
-// const mapStateToProps = (state) => ({
-//     toggleMarkerAction: state.toggleMarkerAction
-// });
-
-// const mapDispatchToProps = (dispatch) => ({
-//     showDetails: () => dispatch({ type: "SHOW_DETAILS" }),
-//     addDetails: () => dispatch({ type: "ADD_DETAILS" })
-// });
-
-// export default Connect(mapStateToProps, mapDispatchToProps)(LocalMap);
