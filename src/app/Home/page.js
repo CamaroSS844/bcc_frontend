@@ -16,7 +16,7 @@ function Home() {
   const [isClient, setIsClient] = useState(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const authToken = isClient? localStorage.getItem("authToken") :false // Replace with dynamic token retrieval if needed
+  const authToken = "b91df6ff7d28c8a2fe902cab8486dee20a4b077f" // Replace with dynamic token retrieval if needed
 
 
   useEffect(() => {
@@ -25,6 +25,7 @@ function Home() {
 
 
   useEffect(() => {
+    console.log(authToken);
     if (!authToken) {
       router.push("/"); // Redirect to login
       return;
