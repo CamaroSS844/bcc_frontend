@@ -19,6 +19,11 @@ function LocalMap() {
 
     const [filterOption, setFilterOption] = useState("New Graves");
     const [markerFilter, setMarkerFilter] = useState("newGrave");
+    const color = {
+        newGrave: '#9900ff',
+        reserved: '#FFA500',
+        occupied: 'red'
+    }
     const [dropDownDisplay, setDropDownDisplay] = useState("none");
     const [dateValue, setDateValue] = useState('');
     const authToken = localStorage.getItem('authToken');
@@ -103,7 +108,7 @@ function LocalMap() {
                             onCameraChanged={(ev) =>
                                 console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
                             }>
-                            <PoiMarkers pois={locations['Luveve'][markerFilter]} color={'#FBBC04'} toggleData={popUp} />
+                            <PoiMarkers pois={locations['Luveve'][markerFilter]} color={color[markerFilter]} toggleData={popUp} />
                             <PoiMarkers pois={userLocation} color={'green'} toggleData={popUp} newLocation={setUserLocation} />
                         </Map>
                         <div className={styles.filterBar}>
