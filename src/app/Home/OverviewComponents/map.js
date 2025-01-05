@@ -127,7 +127,6 @@ function LocalMap() {
                 <div className={styles.markerContent} >
                     {showDetails ?
                         <div className={styles.graveDetails} >
-                            {/*put an x at the top right to close the pop up*/}
                             <span style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
                                 <button className={styles.closeBtn} onClick={() => setToggleMarkerAction(false)}>X</button>
                             </span>
@@ -160,7 +159,8 @@ function LocalMap() {
                                     </tr>
                                 </tbody>
                             </table>
-                        </div> :
+                        </div> 
+                        :
                         <CreateNewGrave userLocation={userLocation[0].location} locations={locations} setToggleMarkerAction={setToggleMarkerAction} setLocations={setLocations}/>
                     }
                 </div>
