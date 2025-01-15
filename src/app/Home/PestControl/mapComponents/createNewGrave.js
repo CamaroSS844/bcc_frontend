@@ -6,9 +6,9 @@ import { addNewGrave } from '../data/apiCalls';
 
 export const CreateNewGrave = ({ userLocation, locations ,setToggleMarkerAction, setLocations  }) => {
     const [newGraveDetails, setNewGraveDetails] = useState({
-        name_of_deceased: 'John Doe',
-        date_of_death: '7/4/2021',
-        date_of_burial: '8/4/2021',
+        name_of_deceased: '',
+        date_of_death: '',
+        date_of_burial: '',
         grave_number: '',
         grave_type: 'Standard',
         grave_status: 'New Grave',
@@ -69,7 +69,7 @@ export const CreateNewGrave = ({ userLocation, locations ,setToggleMarkerAction,
             <button className={styles.closeBtn} onClick={() => setToggleMarkerAction(false)}>X</button>
         </span>
         <h2>Add New Grave</h2>
-        {/* <input
+        <input
             type='text'
             placeholder='Name of Deceased'
             className={styles.inputFields}
@@ -95,7 +95,7 @@ export const CreateNewGrave = ({ userLocation, locations ,setToggleMarkerAction,
                 onChange={(e) => setNewGraveDetails({ ...newGraveDetails, date_of_burial: e.target.value })}
                 required
             />
-        </span> */}
+        </span>
         <input
             type='text'
             placeholder='Grave Number e.g. 12 A 34'

@@ -4,14 +4,9 @@ import {
     Map,
 } from '@vis.gl/react-google-maps';
 import styles from './../page.module.css';
-import { sortData } from './data/dataSorting';
 import { useAppSelector, useAppDispatch } from '@/lib/hooks';
 import { dataSelector } from '@/lib/features/dataStorageSlice';
-import { downCaret } from '../utils/svgs';
 import { PoiMarkers } from './pointsOfInterest';
-import { addNewGrave, retrieveData } from './data/apiCalls';
-import { initialize, addNew, updateGrave } from '@/lib/features/dataStorageSlice';
-import { CreateNewGrave } from './mapComponents/createNewGrave';
 
 
 
@@ -26,26 +21,10 @@ function LocalMap() {
     }
     const [dropDownDisplay, setDropDownDisplay] = useState("none");
     const [dateValue, setDateValue] = useState('');
-    const authToken = localStorage.getItem('authToken');
-    const dispatch = useAppDispatch();
     const [requiredDetailsKey, setRequiredDetailsKey] = useState(0);
     const [showDetails, setShowDetails] = useState(false);
     const [toggleMarkerAction, setToggleMarkerAction] = useState(false);
-    const [locations, setLocations] = useState({
-        Luveve: {
-            reserved: [],
-            newGrave: [],
-            occupied: []
-        }, Mvutshwa: {
-            reserved: [],
-            newGrave: [],
-            occupied: []
-        }, Anthlone: {
-            reserved: [],
-            newGrave: [],
-            occupied: []
-        }
-    });
+    const [locations, setLocations] = useState([]);
     const data = useAppSelector(dataSelector);
 
     useEffect(() => {
@@ -58,16 +37,6 @@ function LocalMap() {
     const [userLocation, setUserLocation] = useState([{
         key: -2, id: -2, location: { latitude: -20.093476785630237, longitude: 28.489348801053524 }
     }]);
-
-    //update grave will only update the local store and not the database.
-    //when the grave is in the newGrave state, it will be updated to reserved, to get to this we have to add a small form to collect the information on who reserved the grave
-    //and when it is in the reserved state, it will be updated to occupied. to get to this we have to add a small form to collect the information on who is the deceased, date of burial and all
-    const updateGrave = (grave, authToken, dispatch) => {
-        if (markerFilter == "newGrave") {
-        } else if (markerFilter == "reserved") {
-        }
-        setToggleMarkerAction(false);
-    }
 
     const handleClick = (val) => {
         setFilterOption(val);
@@ -148,31 +117,18 @@ function LocalMap() {
                             <h2>Grave Details</h2>
                             <table style={{ width: '100%', height: '50%' }}>
                                 <tbody>
-                                    {
-                                        markerFilter == "occupied" ?
-                                            <tr>
-                                                <th>Name of Deceased:</th>
-                                                <td>{JSON.stringify(locations['Luveve'][markerFilter][requiredDetailsKey]['name_of_deceased'])}</td>
-                                            </tr>
-                                            : null
-                                    }
-                                    {
-                                        markerFilter == "occupied" ?
-                                            <tr>
-                                                <th>Date of Death:</th>
-                                                <td>{JSON.stringify(locations['Luveve'][markerFilter][requiredDetailsKey]['date_of_death'])}</td>
-                                            </tr>
-                                            : null
-
-                                    }
-                                    {
-                                        markerFilter == "occupied" ?
-                                            <tr>
-                                                <th>Date of Burial:</th>
-                                                <td>{JSON.stringify(locations['Luveve'][markerFilter][requiredDetailsKey]['date_of_burial'])}</td>
-                                            </tr>
-                                            : null
-                                    }
+                                    <tr>
+                                        <th>Name of Deceased:</th>
+                                        <td>{JSON.stringify(locations['Luveve'][markerFilter][requiredDetailsKey]['name_of_deceased'])}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Date of Death:</th>
+                                        <td>{JSON.stringify(locations['Luveve'][markerFilter][requiredDetailsKey]['date_of_death'])}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Date of Burial:</th>
+                                        <td>{JSON.stringify(locations['Luveve'][markerFilter][requiredDetailsKey]['date_of_burial'])}</td>
+                                    </tr>
                                     <tr>
                                         <th>Grave Number:</th>
                                         <td>{JSON.stringify(locations['Luveve'][markerFilter][requiredDetailsKey]['grave_number'])}</td>
@@ -187,15 +143,9 @@ function LocalMap() {
                                     </tr>
                                 </tbody>
                             </table>
-                            <button className={styles.updateBtn} onClick={() => updateGrave(locations['Luveve'][markerFilter][requiredDetailsKey], authToken, dispatch)}>
-                                {
-                                    markerFilter == "newGrave" ? "Reserve Grave" : "Update Grave"
-                                }
-                                </button>
-                        </div>
+                        </div> 
                         :
-
-                        <CreateNewGrave userLocation={userLocation[0].location} locations={locations} setToggleMarkerAction={setToggleMarkerAction} setLocations={setLocations} />
+                        <CreateNewGrave userLocation={userLocation[0].location} locations={locations} setToggleMarkerAction={setToggleMarkerAction} setLocations={setLocations}/>
                     }
                 </div>
                 : null
